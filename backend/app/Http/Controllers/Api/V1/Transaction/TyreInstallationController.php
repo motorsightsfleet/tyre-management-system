@@ -5,13 +5,17 @@ namespace App\Http\Controllers\Api\V1\Transaction;
 use App\Http\Controllers\Controller;
 use App\Models\Tyre;
 use App\Models\Vehicle;
+use App\Services\Tyre\TyreHealthService;
 use App\Services\Tyre\TyreLifecycleService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class TyreInstallationController extends Controller
 {
-    public function __construct(private readonly TyreLifecycleService $lifecycle) {}
+    public function __construct(
+        private readonly TyreLifecycleService $lifecycle,
+        private readonly TyreHealthService $health,
+    ) {}
 
     public function axleView(int $vehicleId): JsonResponse
     {
@@ -35,7 +39,7 @@ class TyreInstallationController extends Controller
                     'pattern' => $tyre->tyrePattern?->name,
                     'size' => $tyre->tyreSize?->code,
                     'status' => $tyre->status,
-                    'health_status' => $this->healthStatus($tyre),
+                    'health_status' => $this->health->statusFor($tyre),
                 ] : null,
             ];
         });
@@ -46,30 +50,6 @@ class TyreInstallationController extends Controller
                 'positions' => $positions,
             ],
         ]);
-    }
-
-    private function healthStatus(Tyre $tyre): string
-    {
-        $lastInspection = $tyre->inspections()->latest('inspected_at')->first();
-
-        if ($tyre->status === 'scrapped') {
-            return 'scrapped';
-        }
-
-        if ($lastInspection?->tread_depth_mm !== null) {
-            if ($lastInspection->tread_depth_mm <= 4) {
-                return 'replace';
-            }
-            if ($lastInspection->tread_depth_mm <= 8) {
-                return 'rotation_due';
-            }
-        }
-
-        if (! $lastInspection || $lastInspection->inspected_at->lt(now()->subDays(7))) {
-            return 'inspection_due';
-        }
-
-        return 'healthy';
     }
 
     public function install(Request $request): JsonResponse

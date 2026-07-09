@@ -43,6 +43,17 @@ import { StockMovementsPage } from '@/pages/transactions/StockMovementsPage'
 import { TyreHistoryPage } from '@/pages/transactions/TyreHistoryPage'
 import { LifecycleTimelinePage } from '@/pages/transactions/LifecycleTimelinePage'
 import { BarcodeRfidPage } from '@/pages/transactions/BarcodeRfidPage'
+import { ExecutiveDashboardPage } from '@/pages/dashboard/ExecutiveDashboardPage'
+import { FleetOverviewPage } from '@/pages/dashboard/FleetOverviewPage'
+import { TyreHealthPage } from '@/pages/dashboard/TyreHealthPage'
+import { TyreLifecyclePage } from '@/pages/dashboard/TyreLifecyclePage'
+import { CostAnalysisPage } from '@/pages/dashboard/CostAnalysisPage'
+import { UpcomingActivitiesPage } from '@/pages/dashboard/UpcomingActivitiesPage'
+import { DashboardNotificationsPage } from '@/pages/dashboard/DashboardNotificationsPage'
+import { AnalyticsPage } from '@/pages/analytics/AnalyticsPage'
+import { analyticsConfigs } from '@/config/analytics'
+import { ReportPage } from '@/pages/reports/ReportPage'
+import { reportConfigs } from '@/config/reports'
 
 /**
  * Populated by feature modules as real pages are built (master data CRUD,
@@ -50,6 +61,15 @@ import { BarcodeRfidPage } from '@/pages/transactions/BarcodeRfidPage'
  * here falls back to ComingSoonPage so the full nav is always clickable.
  */
 export const pageOverrides: Record<string, ComponentType> = {
+  // Dashboard
+  '/dashboard': ExecutiveDashboardPage,
+  '/dashboard/fleet-overview': FleetOverviewPage,
+  '/dashboard/tyre-health': TyreHealthPage,
+  '/dashboard/tyre-lifecycle': TyreLifecyclePage,
+  '/dashboard/cost-analysis': CostAnalysisPage,
+  '/dashboard/upcoming-activities': UpcomingActivitiesPage,
+  '/dashboard/notifications': DashboardNotificationsPage,
+
   '/master-data/tyres': TyresPage,
   '/settings/users': UsersPage,
   '/settings/roles': RolesPage,
@@ -117,6 +137,14 @@ export const pageOverrides: Record<string, ComponentType> = {
 
 for (const [path, config] of Object.entries(masterDataEntityConfigs)) {
   pageOverrides[path] = () => <CrudPage config={config} />
+}
+
+for (const [path, config] of Object.entries(analyticsConfigs)) {
+  pageOverrides[path] = () => <AnalyticsPage config={config} />
+}
+
+for (const [path, config] of Object.entries(reportConfigs)) {
+  pageOverrides[path] = () => <ReportPage config={config} />
 }
 
 function resolveElement(path: string, label: string) {

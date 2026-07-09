@@ -214,6 +214,9 @@ Route::prefix('v1')->group(function () {
         // Dashboard + Analytics
         Route::middleware('permission:analytics.view')->group(function () {
             Route::get('dashboard/kpis', [DashboardController::class, 'kpis']);
+            Route::get('dashboard/fleet-overview', [DashboardController::class, 'fleetOverview']);
+            Route::get('dashboard/tyre-health', [DashboardController::class, 'tyreHealth']);
+            Route::get('dashboard/upcoming-activities', [DashboardController::class, 'upcomingActivities']);
 
             Route::prefix('analytics')->group(function () {
                 Route::get('cost-per-km', [AnalyticsController::class, 'costPerKm']);

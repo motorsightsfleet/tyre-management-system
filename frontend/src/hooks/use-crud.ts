@@ -32,6 +32,13 @@ export function useCrudAll<T = Record<string, unknown>>(resource: string, params
   })
 }
 
+export function useApiQuery<T = Record<string, unknown>>(url: string, params: ListParams = {}) {
+  return useQuery<T>({
+    queryKey: [url, 'query', params],
+    queryFn: async () => (await apiClient.get(url, { params })).data.data,
+  })
+}
+
 export function useCrudItem<T = Record<string, unknown>>(resource: string, id: number | string | undefined) {
   return useQuery<{ data: T }>({
     queryKey: [resource, 'item', id],
