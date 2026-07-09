@@ -13,8 +13,8 @@ COPY composer.json composer.lock ./
 RUN composer install --no-scripts --no-autoloader --no-interaction
 
 COPY . .
-RUN composer dump-autoload --optimize
+RUN composer dump-autoload --optimize && chmod +x docker/entrypoint.sh
 
 EXPOSE 8000
 
-CMD ["sh", "-c", "php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=8000"]
+CMD ["docker/entrypoint.sh"]
