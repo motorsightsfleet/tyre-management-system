@@ -1,7 +1,10 @@
 <?php
 
+use App\Http\Controllers\Api\V1\Analytics\AnalyticsController;
+use App\Http\Controllers\Api\V1\Analytics\DashboardController;
 use App\Http\Controllers\Api\V1\Auth\AuthController;
 use App\Http\Controllers\Api\V1\MasterData\AxleConfigurationController;
+use App\Http\Controllers\Api\V1\Reports\ReportController;
 use App\Http\Controllers\Api\V1\MasterData\CustomerController;
 use App\Http\Controllers\Api\V1\MasterData\DamageTypeController;
 use App\Http\Controllers\Api\V1\MasterData\FailureCodeController;
@@ -194,6 +197,33 @@ Route::prefix('v1')->group(function () {
                 Route::post('lost-tyres', [LostController::class, 'store']);
                 Route::put('lost-tyres/{id}', [LostController::class, 'update']);
             });
+        });
+
+        // Dashboard + Analytics
+        Route::middleware('permission:analytics.view')->group(function () {
+            Route::get('dashboard/kpis', [DashboardController::class, 'kpis']);
+
+            Route::prefix('analytics')->group(function () {
+                Route::get('cost-per-km', [AnalyticsController::class, 'costPerKm']);
+                Route::get('cost-per-hour', [AnalyticsController::class, 'costPerHour']);
+                Route::get('cost-per-vehicle', [AnalyticsController::class, 'costPerVehicle']);
+                Route::get('cost-per-fleet', [AnalyticsController::class, 'costPerFleet']);
+                Route::get('cost-per-site', [AnalyticsController::class, 'costPerSite']);
+                Route::get('cost-per-project', [AnalyticsController::class, 'costPerProject']);
+                Route::get('brand-performance', [AnalyticsController::class, 'brandPerformance']);
+                Route::get('pattern-performance', [AnalyticsController::class, 'patternPerformance']);
+                Route::get('tyre-lifetime', [AnalyticsController::class, 'tyreLifetime']);
+                Route::get('tyre-utilization', [AnalyticsController::class, 'tyreUtilization']);
+                Route::get('failure-analysis', [AnalyticsController::class, 'failureAnalysis']);
+                Route::get('damage-analysis', [AnalyticsController::class, 'damageAnalysis']);
+                Route::get('scrap-analysis', [AnalyticsController::class, 'scrapAnalysis']);
+            });
+        });
+
+        // Reports
+        Route::prefix('reports')->group(function () {
+            Route::middleware('permission:reports.view')->get('{key}', [ReportController::class, 'show']);
+            Route::middleware('permission:reports.export')->get('{key}/export', [ReportController::class, 'export']);
         });
 
         // Settings
