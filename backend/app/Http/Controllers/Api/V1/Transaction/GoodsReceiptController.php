@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api\V1\Transaction;
 
 use App\Http\Controllers\Controller;
 use App\Models\GoodsReceipt;
-use App\Models\PurchaseOrder;
 use App\Models\PurchaseOrderItem;
 use App\Models\StockMovement;
 use App\Models\Tyre;

@@ -16,7 +16,7 @@ use Spatie\Permission\Traits\HasRoles;
 class User extends Authenticatable implements JWTSubject
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable, HasRoles, Auditable, SoftDeletes;
+    use Auditable, HasFactory, HasRoles, Notifiable, SoftDeletes;
 
     protected $guard_name = 'api';
 

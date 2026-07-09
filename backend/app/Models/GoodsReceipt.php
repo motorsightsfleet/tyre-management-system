@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class GoodsReceipt extends Model
 {
-    use HasFactory, SoftDeletes, Auditable;
+    use Auditable, HasFactory, SoftDeletes;
 
     protected $fillable = ['code', 'purchase_order_id', 'warehouse_id', 'received_by', 'receipt_date', 'notes'];
 

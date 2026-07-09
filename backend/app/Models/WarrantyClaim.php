@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class WarrantyClaim extends Model
 {
-    use HasFactory, Auditable;
+    use Auditable, HasFactory;
 
     protected $fillable = [
         'tyre_id', 'supplier_id', 'failure_code_id', 'claim_date', 'reason',

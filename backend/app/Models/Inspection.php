@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Inspection extends Model
 {
-    use HasFactory, Auditable;
+    use Auditable, HasFactory;
 
     protected $fillable = [
         'tyre_id', 'vehicle_id', 'tyre_position_id', 'inspection_checklist_id', 'type',

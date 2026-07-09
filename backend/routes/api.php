@@ -4,7 +4,6 @@ use App\Http\Controllers\Api\V1\Analytics\AnalyticsController;
 use App\Http\Controllers\Api\V1\Analytics\DashboardController;
 use App\Http\Controllers\Api\V1\Auth\AuthController;
 use App\Http\Controllers\Api\V1\MasterData\AxleConfigurationController;
-use App\Http\Controllers\Api\V1\Reports\ReportController;
 use App\Http\Controllers\Api\V1\MasterData\CustomerController;
 use App\Http\Controllers\Api\V1\MasterData\DamageTypeController;
 use App\Http\Controllers\Api\V1\MasterData\FailureCodeController;
@@ -23,8 +22,10 @@ use App\Http\Controllers\Api\V1\MasterData\TyrePositionController;
 use App\Http\Controllers\Api\V1\MasterData\TyreSizeController;
 use App\Http\Controllers\Api\V1\MasterData\TyreTypeController;
 use App\Http\Controllers\Api\V1\MasterData\VehicleCategoryController;
+use App\Http\Controllers\Api\V1\MasterData\VehicleController;
 use App\Http\Controllers\Api\V1\MasterData\VehicleModelController;
 use App\Http\Controllers\Api\V1\MasterData\WarehouseController;
+use App\Http\Controllers\Api\V1\Reports\ReportController;
 use App\Http\Controllers\Api\V1\Settings\ApprovalWorkflowController;
 use App\Http\Controllers\Api\V1\Settings\AuditLogController;
 use App\Http\Controllers\Api\V1\Settings\BarcodeRfidConfigController;
@@ -111,6 +112,17 @@ Route::prefix('v1')->group(function () {
         Route::prefix('master-data/tyres')->middleware('permission:master.manage')->group(function () {
             Route::put('{id}', [TyreController::class, 'update']);
             Route::post('{id}/generate-barcode', [TyreController::class, 'generateBarcode']);
+        });
+
+        // Vehicle master data (bespoke controller: richer relations than the generic engine assumes).
+        Route::prefix('master-data/vehicles')->middleware('permission:master.view|master.manage')->group(function () {
+            Route::get('/', [VehicleController::class, 'index']);
+            Route::get('{id}', [VehicleController::class, 'show']);
+        });
+        Route::prefix('master-data/vehicles')->middleware('permission:master.manage')->group(function () {
+            Route::post('/', [VehicleController::class, 'store']);
+            Route::put('{id}', [VehicleController::class, 'update']);
+            Route::delete('{id}', [VehicleController::class, 'destroy']);
         });
 
         // Transactions

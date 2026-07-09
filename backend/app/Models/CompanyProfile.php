@@ -3,8 +3,9 @@
 namespace App\Models;
 
 use App\Models\Concerns\Auditable;
+use Illuminate\Database\Eloquent\Model;
 
-class CompanyProfile extends \Illuminate\Database\Eloquent\Model
+class CompanyProfile extends Model
 {
     use Auditable;
 

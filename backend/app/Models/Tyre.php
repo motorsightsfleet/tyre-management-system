@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Tyre extends Model
 {
-    use HasFactory, SoftDeletes, Auditable;
+    use Auditable, HasFactory, SoftDeletes;
 
     protected $fillable = [
         'serial_number', 'barcode_code', 'rfid_code', 'tyre_brand_id', 'tyre_pattern_id',

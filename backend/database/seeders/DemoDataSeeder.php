@@ -5,17 +5,21 @@ namespace Database\Seeders;
 use App\Models\ApprovalRequest;
 use App\Models\ApprovalWorkflow;
 use App\Models\AxleConfiguration;
+use App\Models\FailureCode;
 use App\Models\GoodsReceipt;
 use App\Models\GoodsReceiptItem;
+use App\Models\InitialStockEntry;
 use App\Models\Inspection;
 use App\Models\InspectionChecklist;
-use App\Models\InitialStockEntry;
 use App\Models\LostRecord;
 use App\Models\Project;
 use App\Models\PurchaseOrder;
 use App\Models\PurchaseOrderItem;
 use App\Models\Repair;
+use App\Models\RepairType;
 use App\Models\Retread;
+use App\Models\RetreadVendor;
+use App\Models\ScrapReason;
 use App\Models\ScrapRecord;
 use App\Models\Site;
 use App\Models\StockAdjustment;
@@ -24,15 +28,18 @@ use App\Models\StockTransfer;
 use App\Models\StockTransferItem;
 use App\Models\Supplier;
 use App\Models\Tyre;
+use App\Models\TyreBrand;
 use App\Models\TyreInstallation;
+use App\Models\TyrePattern;
+use App\Models\TyreSize;
+use App\Models\TyreType;
+use App\Models\User;
 use App\Models\Vehicle;
 use App\Models\VehicleModel as VehicleModelModel;
 use App\Models\VehicleReading;
 use App\Models\Warehouse;
 use App\Models\WarrantyClaim;
-use App\Models\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 
 class DemoDataSeeder extends Seeder
@@ -53,10 +60,10 @@ class DemoDataSeeder extends Seeder
 
     public function run(): void
     {
-        $this->brandIds = \App\Models\TyreBrand::pluck('id', 'code')->toArray();
-        $this->patternIds = \App\Models\TyrePattern::pluck('id', 'code')->toArray();
-        $this->sizeIds = \App\Models\TyreSize::pluck('id', 'code')->toArray();
-        $this->typeRadialId = \App\Models\TyreType::where('code', 'RADIAL')->value('id');
+        $this->brandIds = TyreBrand::pluck('id', 'code')->toArray();
+        $this->patternIds = TyrePattern::pluck('id', 'code')->toArray();
+        $this->sizeIds = TyreSize::pluck('id', 'code')->toArray();
+        $this->typeRadialId = TyreType::where('code', 'RADIAL')->value('id');
         $this->supplierIds = Supplier::pluck('id', 'code')->toArray();
         $this->axleConfigs = AxleConfiguration::get()->keyBy('code')->toArray();
         $this->vehicleModels = VehicleModelModel::get()->keyBy('code')->toArray();
@@ -443,11 +450,11 @@ class DemoDataSeeder extends Seeder
     {
         $inspector = User::where('email', 'inspector@tms.local')->first();
         $fleetManager = User::where('email', 'fleet.manager@tms.local')->first();
-        $repairType = \App\Models\RepairType::where('code', 'SECTION-REPAIR')->first();
-        $retreadVendor = \App\Models\RetreadVendor::where('code', 'RTV-VIPAL')->first();
-        $scrapReason = \App\Models\ScrapReason::where('code', 'BELOW-MIN-TREAD')->first();
+        $repairType = RepairType::where('code', 'SECTION-REPAIR')->first();
+        $retreadVendor = RetreadVendor::where('code', 'RTV-VIPAL')->first();
+        $scrapReason = ScrapReason::where('code', 'BELOW-MIN-TREAD')->first();
         $supplier = Supplier::where('code', 'SUP-GLOBALTYRE')->first();
-        $failureCode = \App\Models\FailureCode::where('code', 'MFG-DEFECT')->first();
+        $failureCode = FailureCode::where('code', 'MFG-DEFECT')->first();
 
         $repairTyre = Tyre::create([
             'serial_number' => $this->serial('BRIDGESTONE'),

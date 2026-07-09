@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api\V1\Reports;
 
 use App\Exports\GenericArrayExport;
 use App\Http\Controllers\Controller;
-use App\Models\GoodsReceipt;
 use App\Models\Inspection;
 use App\Models\PurchaseOrder;
 use App\Models\Repair;
@@ -15,6 +14,7 @@ use App\Models\TyreInstallation;
 use App\Models\TyreRotation;
 use App\Services\Analytics\CostAnalyticsService;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Maatwebsite\Excel\Facades\Excel;
@@ -42,7 +42,7 @@ class ReportController extends Controller
 
     public function __construct(private readonly CostAnalyticsService $cost) {}
 
-    public function show(string $key, Request $request): \Illuminate\Http\JsonResponse
+    public function show(string $key, Request $request): JsonResponse
     {
         [$title, $headings, $rows] = $this->resolve($key, $request);
 
