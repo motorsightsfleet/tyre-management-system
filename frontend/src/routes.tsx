@@ -17,6 +17,7 @@ import { NotificationsPage } from '@/pages/settings/NotificationsPage'
 import { BarcodeConfigPage } from '@/pages/settings/BarcodeConfigPage'
 import { AuditLogPage } from '@/pages/settings/AuditLogPage'
 import { SystemConfigurationPage } from '@/pages/settings/SystemConfigurationPage'
+import { AxleViewPage } from '@/pages/transactions/AxleViewPage'
 
 /**
  * Populated by feature modules as real pages are built (master data CRUD,
@@ -33,6 +34,7 @@ export const pageOverrides: Record<string, ComponentType> = {
   '/settings/audit-log': AuditLogPage,
   '/settings/system-configuration': SystemConfigurationPage,
   '/settings/approval-workflows': () => <CrudPage config={approvalWorkflowConfig} />,
+  '/transactions/axle-view': AxleViewPage,
 }
 
 for (const [path, config] of Object.entries(masterDataEntityConfigs)) {

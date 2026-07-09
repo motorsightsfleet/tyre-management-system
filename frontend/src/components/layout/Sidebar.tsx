@@ -72,12 +72,12 @@ function NavSectionBlock({ section }: { section: (typeof NAV)[number] }) {
   const permitted = usePermitted()
   const Icon = section.icon
 
-  if (!permitted(section.permission)) return null
-
   const containsActive = section.children.some((c) =>
     isNavGroup(c) ? c.items.some((i) => location.pathname.startsWith(i.path)) : location.pathname.startsWith(c.path)
   )
   const [open, setOpen] = useState(containsActive || section.label === 'Dashboard')
+
+  if (!permitted(section.permission)) return null
 
   return (
     <div className="flex flex-col gap-0.5">
