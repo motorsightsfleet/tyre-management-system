@@ -23,13 +23,11 @@ function FieldOptionsSelect({
   value: unknown
   onChange: (value: string) => void
 }) {
-  const { data: options } = useCrudAll<Record<string, unknown>>(field.optionsResource ?? '', {
-    status: 'active',
-  })
+  const { data: options } = useCrudAll<Record<string, unknown>>(field.optionsResource ?? '', field.optionsParams ?? { status: 'active' })
 
   const dynamicOptions: SelectOption[] = (options ?? []).map((o) => ({
     value: o[field.optionValueKey ?? 'id'] as string | number,
-    label: String(o[field.optionLabelKey ?? 'name'] ?? o[field.optionLabelKey ?? 'code']),
+    label: field.optionLabelFn ? field.optionLabelFn(o) : String(o[field.optionLabelKey ?? 'name'] ?? o[field.optionLabelKey ?? 'code']),
   }))
 
   const allOptions = field.options ?? dynamicOptions
@@ -98,7 +96,7 @@ export function EntityForm({ config, defaultValues, onSubmit, onCancel, isSubmit
                   type="number"
                   step="any"
                   placeholder={field.placeholder}
-                  {...register(field.name, { valueAsNumber: true })}
+                  {...register(field.name, { setValueAs: (v) => (v === '' ? undefined : Number(v)) })}
                 />
               )}
 

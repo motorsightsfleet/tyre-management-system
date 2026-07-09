@@ -19,6 +19,9 @@ export interface EntityField {
   optionsResource?: string
   optionLabelKey?: string
   optionValueKey?: string
+  /** Extra query params for optionsResource; defaults to { status: 'active' } */
+  optionsParams?: Record<string, string>
+  optionLabelFn?: (row: Record<string, unknown>) => string
   colSpan?: 1 | 2
   description?: string
 }

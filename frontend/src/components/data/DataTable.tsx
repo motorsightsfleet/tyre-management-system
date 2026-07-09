@@ -136,8 +136,15 @@ export function DataTable<T extends Record<string, unknown>>({
   )
 }
 
+const ISO_DATE_RE = /^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(\.\d+)?Z?)?$/
+const MIDNIGHT_RE = /T00:00:00(\.0+)?Z?$/
+
 function renderCell(value: unknown): ReactNode {
   if (value === null || value === undefined) return <span className="text-muted-foreground">—</span>
   if (typeof value === 'boolean') return value ? 'Yes' : 'No'
+  if (typeof value === 'string' && ISO_DATE_RE.test(value)) {
+    const date = new Date(value)
+    return value.includes('T') && !MIDNIGHT_RE.test(value) ? date.toLocaleString() : date.toLocaleDateString()
+  }
   return String(value)
 }

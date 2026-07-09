@@ -7,8 +7,25 @@ import { RequireAuth, RequirePermission } from '@/components/layout/RequireAuth'
 import { LoginPage } from '@/pages/auth/LoginPage'
 import { ComingSoonPage } from '@/pages/ComingSoonPage'
 import { CrudPage } from '@/components/data/CrudPage'
+import { CreateListPage } from '@/components/data/CreateListPage'
 import { masterDataEntityConfigs } from '@/config/entities'
 import { approvalWorkflowConfig } from '@/config/entities/settings'
+import {
+  repairConfig,
+  retreadConfig,
+  warrantyClaimConfig,
+  scrapConfig,
+  lostTyreConfig,
+  stockAdjustmentConfig,
+  initialStockEntryConfig,
+} from '@/config/entities/simple-transactions'
+import {
+  dailyInspectionConfig,
+  periodicInspectionConfig,
+  pressureCheckConfig,
+  treadDepthConfig,
+  damageInspectionConfig,
+} from '@/config/entities/inspections'
 import { TyresPage } from '@/pages/master-data/TyresPage'
 import { UsersPage } from '@/pages/settings/UsersPage'
 import { RolesPage } from '@/pages/settings/RolesPage'
@@ -18,6 +35,14 @@ import { BarcodeConfigPage } from '@/pages/settings/BarcodeConfigPage'
 import { AuditLogPage } from '@/pages/settings/AuditLogPage'
 import { SystemConfigurationPage } from '@/pages/settings/SystemConfigurationPage'
 import { AxleViewPage } from '@/pages/transactions/AxleViewPage'
+import { PurchaseOrdersPage } from '@/pages/transactions/PurchaseOrdersPage'
+import { GoodsReceiptsPage } from '@/pages/transactions/GoodsReceiptsPage'
+import { StockTransfersPage } from '@/pages/transactions/StockTransfersPage'
+import { StockInventoryPage } from '@/pages/transactions/StockInventoryPage'
+import { StockMovementsPage } from '@/pages/transactions/StockMovementsPage'
+import { TyreHistoryPage } from '@/pages/transactions/TyreHistoryPage'
+import { LifecycleTimelinePage } from '@/pages/transactions/LifecycleTimelinePage'
+import { BarcodeRfidPage } from '@/pages/transactions/BarcodeRfidPage'
 
 /**
  * Populated by feature modules as real pages are built (master data CRUD,
@@ -34,7 +59,60 @@ export const pageOverrides: Record<string, ComponentType> = {
   '/settings/audit-log': AuditLogPage,
   '/settings/system-configuration': SystemConfigurationPage,
   '/settings/approval-workflows': () => <CrudPage config={approvalWorkflowConfig} />,
+
+  // Tyre Installation — the Interactive Axle View is the tool for all four.
   '/transactions/axle-view': AxleViewPage,
+  '/transactions/install-tyre': AxleViewPage,
+  '/transactions/remove-tyre': AxleViewPage,
+  '/transactions/rotation': AxleViewPage,
+  '/transactions/change-position': AxleViewPage,
+
+  // Procurement
+  '/transactions/purchase-orders': PurchaseOrdersPage,
+  '/transactions/goods-receipts': GoodsReceiptsPage,
+  '/transactions/initial-stock-entries': () => (
+    <CreateListPage config={initialStockEntryConfig} permission="transaction.procurement.manage" />
+  ),
+
+  // Warehouse
+  '/transactions/stock-inventory': StockInventoryPage,
+  '/transactions/stock-movements': StockMovementsPage,
+  '/transactions/stock-transfers': StockTransfersPage,
+  '/transactions/stock-adjustments': () => (
+    <CreateListPage config={stockAdjustmentConfig} permission="transaction.warehouse.manage" />
+  ),
+  '/transactions/barcode-rfid': BarcodeRfidPage,
+
+  // Tyre Inspection
+  '/transactions/inspections/daily': () => (
+    <CreateListPage config={dailyInspectionConfig} permission="transaction.inspection.manage" fixedValues={{ type: 'daily' }} extraParams={{ type: 'daily' }} />
+  ),
+  '/transactions/inspections/periodic': () => (
+    <CreateListPage config={periodicInspectionConfig} permission="transaction.inspection.manage" fixedValues={{ type: 'periodic' }} extraParams={{ type: 'periodic' }} />
+  ),
+  '/transactions/inspections/pressure': () => (
+    <CreateListPage config={pressureCheckConfig} permission="transaction.inspection.manage" fixedValues={{ type: 'pressure' }} extraParams={{ type: 'pressure' }} />
+  ),
+  '/transactions/inspections/tread': () => (
+    <CreateListPage config={treadDepthConfig} permission="transaction.inspection.manage" fixedValues={{ type: 'tread' }} extraParams={{ type: 'tread' }} />
+  ),
+  '/transactions/inspections/damage': () => (
+    <CreateListPage config={damageInspectionConfig} permission="transaction.inspection.manage" fixedValues={{ type: 'damage' }} extraParams={{ type: 'damage' }} />
+  ),
+
+  // Maintenance
+  '/transactions/repairs': () => <CreateListPage config={repairConfig} permission="transaction.maintenance.manage" />,
+  '/transactions/retreads': () => <CreateListPage config={retreadConfig} permission="transaction.maintenance.manage" />,
+  '/transactions/warranty-claims': () => <CreateListPage config={warrantyClaimConfig} permission="transaction.maintenance.manage" />,
+
+  // Lifecycle
+  '/transactions/tyre-history': TyreHistoryPage,
+  '/transactions/lifecycle-timeline': LifecycleTimelinePage,
+  '/transactions/movement-history': () => <StockMovementsPage title="Movement History" />,
+
+  // Disposal
+  '/transactions/scraps': () => <CreateListPage config={scrapConfig} permission="transaction.disposal.manage" />,
+  '/transactions/lost-tyres': () => <CreateListPage config={lostTyreConfig} permission="transaction.disposal.manage" />,
 }
 
 for (const [path, config] of Object.entries(masterDataEntityConfigs)) {
