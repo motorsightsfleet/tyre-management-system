@@ -1,38 +1,13 @@
-import { useEffect, useState } from 'react'
 import { BellOff } from 'lucide-react'
 
 import { QueryState } from '@/components/dashboard/QueryState'
-import { ActivityRow, activityKey, type ActivityItem } from '@/components/dashboard/ActivityFeed'
+import { ActivityRow, activityKey } from '@/components/dashboard/ActivityFeed'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardAction } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { useApiQuery } from '@/hooks/use-crud'
-
-const READ_STORAGE_KEY = 'tms.notifications.read'
-
-function loadRead(): Set<string> {
-  try {
-    return new Set(JSON.parse(localStorage.getItem(READ_STORAGE_KEY) ?? '[]'))
-  } catch {
-    return new Set()
-  }
-}
-
-function saveRead(read: Set<string>) {
-  localStorage.setItem(READ_STORAGE_KEY, JSON.stringify([...read]))
-}
+import { useNotifications } from '@/hooks/use-notifications'
 
 export function DashboardNotificationsPage() {
-  const { data, isLoading, isError } = useApiQuery<ActivityItem[]>('/dashboard/upcoming-activities')
-  const [read, setRead] = useState<Set<string>>(() => loadRead())
-
-  useEffect(() => saveRead(read), [read])
-
-  const items = data ?? []
-  const unreadCount = items.filter((item, idx) => !read.has(activityKey(item, idx))).length
-
-  function markAllRead() {
-    setRead(new Set(items.map((item, idx) => activityKey(item, idx))))
-  }
+  const { items, isLoading, read, unreadCount, markRead, markAllRead } = useNotifications()
 
   return (
     <div className="flex flex-col gap-4">
@@ -41,7 +16,7 @@ export function DashboardNotificationsPage() {
         <p className="text-muted-foreground text-sm">System-generated alerts from fleet and tyre activity.</p>
       </div>
 
-      <QueryState isLoading={isLoading} isError={isError}>
+      <QueryState isLoading={isLoading} isError={false}>
         <Card>
           <CardHeader>
             <CardTitle className="text-sm">{unreadCount > 0 ? `${unreadCount} unread` : 'All caught up'}</CardTitle>
@@ -64,12 +39,7 @@ export function DashboardNotificationsPage() {
             {items.map((item, idx) => {
               const key = activityKey(item, idx)
               return (
-                <button
-                  key={key}
-                  type="button"
-                  className="block w-full text-left"
-                  onClick={() => setRead((prev) => new Set(prev).add(key))}
-                >
+                <button key={key} type="button" className="block w-full text-left" onClick={() => markRead(key)}>
                   <ActivityRow item={item} unread={!read.has(key)} />
                 </button>
               )

@@ -7,11 +7,20 @@ import { HEALTH_COLORS, type AxlePosition } from '@/types/axle-view'
 
 interface AxleSchematicProps {
   positions: AxlePosition[]
+  selectedPositionId?: number | null
   onPositionClick: (position: AxlePosition) => void
   onSwap: (fromPositionId: number, toPositionId: number) => void
 }
 
-function PositionNode({ position, onClick }: { position: AxlePosition; onClick: () => void }) {
+function PositionNode({
+  position,
+  selected,
+  onClick,
+}: {
+  position: AxlePosition
+  selected: boolean
+  onClick: () => void
+}) {
   const draggable = useDraggable({
     id: `pos-${position.tyre_position_id}`,
     data: { position },
@@ -45,8 +54,9 @@ function PositionNode({ position, onClick }: { position: AxlePosition; onClick: 
         onClick={onClick}
         title={position.tyre ? `${position.code} — ${position.tyre.serial_number}` : `${position.code} — empty`}
         className={cn(
-          'flex size-11 flex-col items-center justify-center rounded-full border-2 text-[9px] leading-none font-semibold text-white shadow-md transition-transform hover:scale-110 sm:size-12',
-          droppable.isOver && 'ring-4 ring-primary/50 scale-110',
+          'flex size-11 flex-col items-center justify-center rounded-full border-2 text-[9px] leading-none font-semibold text-white shadow-md transition-all duration-200 ease-out hover:scale-110 sm:size-12',
+          droppable.isOver && 'ring-primary/50 scale-110 ring-4',
+          selected && 'glow-selected scale-110',
           !position.tyre && 'border-dashed border-muted-foreground/40 bg-muted text-muted-foreground'
         )}
         style={position.tyre ? { backgroundColor: color, borderColor: color } : undefined}
@@ -57,7 +67,7 @@ function PositionNode({ position, onClick }: { position: AxlePosition; onClick: 
   )
 }
 
-export function AxleSchematic({ positions, onPositionClick, onSwap }: AxleSchematicProps) {
+export function AxleSchematic({ positions, selectedPositionId, onPositionClick, onSwap }: AxleSchematicProps) {
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 6 } }))
 
   const axleLines = useMemo(() => {
@@ -105,7 +115,12 @@ export function AxleSchematic({ positions, onPositionClick, onSwap }: AxleSchema
 
       <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
         {positions.map((position) => (
-          <PositionNode key={position.tyre_position_id} position={position} onClick={() => onPositionClick(position)} />
+          <PositionNode
+            key={position.tyre_position_id}
+            position={position}
+            selected={position.tyre_position_id === selectedPositionId}
+            onClick={() => onPositionClick(position)}
+          />
         ))}
       </DndContext>
     </div>

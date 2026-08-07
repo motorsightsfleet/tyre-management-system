@@ -29,6 +29,7 @@ export function AxleViewPage() {
   const [installOpen, setInstallOpen] = useState(false)
   const [removeOpen, setRemoveOpen] = useState(false)
   const [removeTyreId, setRemoveTyreId] = useState<number | null>(null)
+  const [selectedPositionId, setSelectedPositionId] = useState<number | null>(null)
 
   const queryClient = useQueryClient()
 
@@ -45,6 +46,7 @@ export function AxleViewPage() {
   }
 
   function handlePositionClick(position: AxlePosition) {
+    setSelectedPositionId(position.tyre_position_id)
     if (position.tyre) {
       setDetailTyreId(position.tyre.id)
       setDetailOpen(true)
@@ -52,6 +54,16 @@ export function AxleViewPage() {
       setInstallPosition(position)
       setInstallOpen(true)
     }
+  }
+
+  function handleDetailOpenChange(open: boolean) {
+    setDetailOpen(open)
+    if (!open) setSelectedPositionId(null)
+  }
+
+  function handleInstallOpenChange(open: boolean) {
+    setInstallOpen(open)
+    if (!open) setSelectedPositionId(null)
   }
 
   async function handleSwap(fromPositionId: number, toPositionId: number) {
@@ -119,7 +131,12 @@ export function AxleViewPage() {
           {vehicleId && data && (
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_280px]">
               <div className="flex flex-col items-center gap-4">
-                <AxleSchematic positions={data.positions} onPositionClick={handlePositionClick} onSwap={handleSwap} />
+                <AxleSchematic
+                  positions={data.positions}
+                  selectedPositionId={selectedPositionId}
+                  onPositionClick={handlePositionClick}
+                  onSwap={handleSwap}
+                />
                 <HealthLegend />
               </div>
 
@@ -148,10 +165,10 @@ export function AxleViewPage() {
         </CardContent>
       </Card>
 
-      <TyreDetailPanel tyreId={detailTyreId} open={detailOpen} onOpenChange={setDetailOpen} onRemove={handleRemoveFromPanel} />
+      <TyreDetailPanel tyreId={detailTyreId} open={detailOpen} onOpenChange={handleDetailOpenChange} onRemove={handleRemoveFromPanel} />
 
       {vehicleId && (
-        <InstallTyreDialog open={installOpen} onOpenChange={setInstallOpen} vehicleId={vehicleId} position={installPosition} />
+        <InstallTyreDialog open={installOpen} onOpenChange={handleInstallOpenChange} vehicleId={vehicleId} position={installPosition} />
       )}
 
       <RemoveTyreDialog open={removeOpen} onOpenChange={setRemoveOpen} tyreId={removeTyreId} onRemoved={invalidateAxleView} />

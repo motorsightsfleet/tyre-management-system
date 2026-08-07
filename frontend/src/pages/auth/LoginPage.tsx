@@ -49,10 +49,19 @@ export function LoginPage() {
   }
 
   return (
-    <div className="bg-muted/30 flex min-h-svh items-center justify-center p-4">
-      <Card className="w-full max-w-sm">
+    <div className="from-background via-background to-accent/40 relative flex min-h-svh items-center justify-center overflow-hidden bg-gradient-to-br p-4">
+      <div
+        className="pointer-events-none absolute -top-32 -left-32 size-96 rounded-full opacity-30 blur-3xl"
+        style={{ background: 'radial-gradient(circle, var(--primary), transparent 70%)' }}
+      />
+      <div
+        className="pointer-events-none absolute -right-32 -bottom-32 size-96 rounded-full opacity-30 blur-3xl"
+        style={{ background: 'radial-gradient(circle, var(--accent-2), transparent 70%)' }}
+      />
+
+      <Card className="relative w-full max-w-sm shadow-xl">
         <CardHeader className="items-center text-center">
-          <div className="bg-primary text-primary-foreground mb-2 flex size-10 items-center justify-center rounded-lg text-lg font-bold">
+          <div className="from-primary to-accent-2 text-primary-foreground shadow-primary/30 mb-2 flex size-11 items-center justify-center rounded-xl bg-gradient-to-br text-lg font-bold shadow-lg">
             T
           </div>
           <CardTitle className="text-xl">Tyre Management System</CardTitle>

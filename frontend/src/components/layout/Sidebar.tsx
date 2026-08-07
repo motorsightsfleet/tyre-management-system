@@ -21,11 +21,11 @@ function NavLeafLink({ item, indent = false }: { item: NavLeaf; indent?: boolean
       onClick={() => setMobileNavOpen(false)}
       className={({ isActive }) =>
         cn(
-          'flex items-center gap-2 rounded-md px-2.5 py-1.5 text-sm transition-colors',
+          'relative flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-sm transition-all duration-200',
           indent ? 'pl-8' : 'pl-2.5',
           isActive
-            ? 'bg-sidebar-accent text-sidebar-accent-foreground font-medium'
-            : 'text-sidebar-foreground/80 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground'
+            ? 'bg-sidebar-accent text-sidebar-accent-foreground shadow-[inset_0_0_0_1px_rgba(255,255,255,0.08)] font-medium before:absolute before:top-1/2 before:left-0 before:h-4 before:w-0.5 before:-translate-y-1/2 before:rounded-full before:bg-sidebar-primary before:shadow-[0_0_8px_var(--sidebar-primary)]'
+            : 'text-sidebar-foreground/75 hover:translate-x-0.5 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground'
         )
       }
     >
@@ -108,11 +108,11 @@ function NavSectionBlock({ section }: { section: (typeof NAV)[number] }) {
 export function SidebarNavContent() {
   return (
     <>
-      <div className="flex h-14 items-center gap-2 border-b border-sidebar-border px-4">
-        <div className="flex size-7 items-center justify-center rounded-md bg-primary text-primary-foreground text-sm font-bold">
+      <div className="border-sidebar-border/60 flex h-14 items-center gap-2 border-b px-4">
+        <div className="bg-primary text-primary-foreground shadow-primary/40 flex size-7 items-center justify-center rounded-lg text-sm font-bold shadow-md">
           T
         </div>
-        <span className="truncate text-sm font-semibold">Tyre Management</span>
+        <span className="truncate text-sm font-semibold tracking-tight">Tyre Management</span>
       </div>
       <nav className="flex-1 space-y-1 overflow-y-auto px-2 py-3">
         {NAV.map((section) => (
@@ -129,7 +129,7 @@ export function Sidebar() {
   return (
     <aside
       className={cn(
-        'bg-sidebar text-sidebar-foreground border-sidebar-border hidden shrink-0 flex-col border-r transition-all duration-200 md:flex',
+        'sidebar-gradient text-sidebar-foreground border-sidebar-border hidden shrink-0 flex-col border-r transition-all duration-200 md:flex',
         collapsed ? 'w-0 overflow-hidden md:w-0' : 'w-72'
       )}
     >

@@ -15,7 +15,7 @@ export function AppLayout() {
       <Sidebar />
 
       <Sheet open={mobileNavOpen} onOpenChange={setMobileNavOpen}>
-        <SheetContent side="left" className="bg-sidebar text-sidebar-foreground w-72 gap-0 p-0 [&_button]:text-sidebar-foreground">
+        <SheetContent side="left" className="sidebar-gradient text-sidebar-foreground w-72 gap-0 p-0 [&_button]:text-sidebar-foreground">
           <VisuallyHidden>
             <SheetTitle>Navigation</SheetTitle>
           </VisuallyHidden>
@@ -25,7 +25,7 @@ export function AppLayout() {
 
       <div className="flex min-w-0 flex-1 flex-col">
         <Header />
-        <main className="flex-1 overflow-y-auto p-4 md:p-6">
+        <main className="bg-muted/40 flex-1 overflow-y-auto p-4 md:p-6">
           <Outlet />
         </main>
       </div>
